@@ -16,18 +16,18 @@ export function CreateTagForm() {
           name="name"
           placeholder="название"
           autoComplete="off"
-          className="w-48 rounded-md border border-slate-300 px-3 py-1.5 text-sm outline-none focus:border-slate-500"
+          aria-label="Название тега"
+          aria-invalid={state.errors?.["name"] ? true : undefined}
+          className={`input w-48 ${state.errors?.["name"] ? "input-error" : ""}`}
         />
         {state.errors?.["name"] ? (
-          <p className="mt-1 text-sm text-red-600">{state.errors["name"]}</p>
+          <p className="error-text" role="alert">
+            {state.errors["name"]}
+          </p>
         ) : null}
       </div>
 
-      <select
-        name="color"
-        defaultValue="slate"
-        className="rounded-md border border-slate-300 px-2 py-1.5 text-sm outline-none focus:border-slate-500"
-      >
+      <select name="color" defaultValue="slate" aria-label="Цвет тега" className="input w-auto">
         {TAG_COLORS.map((color) => (
           <option key={color} value={color}>
             {color}
@@ -35,16 +35,12 @@ export function CreateTagForm() {
         ))}
       </select>
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
-      >
+      <button type="submit" disabled={pending} className="btn-primary">
         Создать
       </button>
 
       {state.ok && state.message ? (
-        <span className="self-center text-sm text-green-600">{state.message}</span>
+        <span className="self-center text-sm font-medium text-green-600">{state.message}</span>
       ) : null}
     </form>
   );
@@ -60,13 +56,9 @@ export function RenameTagForm({ id, name }: { id: string; name: string }) {
         name="name"
         defaultValue={name}
         aria-label={`Переименовать тег ${name}`}
-        className="w-40 rounded-md border border-slate-300 px-2 py-1 text-sm outline-none focus:border-slate-500"
+        className={`input w-40 py-1.5 ${state.errors?.["name"] ? "input-error" : ""}`}
       />
-      <button
-        type="submit"
-        disabled={pending}
-        className="text-sm text-slate-600 hover:text-slate-900 disabled:opacity-60"
-      >
+      <button type="submit" disabled={pending} className="btn-link disabled:opacity-55">
         Переименовать
       </button>
       {state.errors?.["name"] ? (

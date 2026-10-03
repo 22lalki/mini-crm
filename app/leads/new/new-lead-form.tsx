@@ -14,28 +14,34 @@ export function NewLeadForm({ tags }: { tags: Tag[] }) {
   const errors = state.errors ?? {};
 
   return (
-    <form action={formAction} className="space-y-4">
-      <Field label="Имя" error={errors["name"]} required>
+    <form action={formAction} className="space-y-5">
+      <Field label="Имя" error={errors["name"]} required htmlFor="name">
         <input
+          id="name"
           name="name"
           autoFocus
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
+          placeholder="Как зовут клиента"
+          aria-invalid={errors["name"] ? true : undefined}
+          className={`input ${errors["name"] ? "input-error" : ""}`}
         />
       </Field>
 
-      <Field label="Контакт" error={errors["contact"]}>
+      <Field label="Контакт" error={errors["contact"]} htmlFor="contact">
         <input
+          id="contact"
           name="contact"
           placeholder="+7…, @username или email"
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
+          className={`input ${errors["contact"] ? "input-error" : ""}`}
         />
       </Field>
 
-      <Field label="Запрос" error={errors["request"]}>
+      <Field label="Запрос" error={errors["request"]} htmlFor="request">
         <textarea
+          id="request"
           name="request"
           rows={4}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
+          placeholder="Что нужно клиенту"
+          className={`input resize-y ${errors["request"] ? "input-error" : ""}`}
         />
       </Field>
 
@@ -43,16 +49,19 @@ export function NewLeadForm({ tags }: { tags: Tag[] }) {
         {tags.length === 0 ? (
           <p className="text-sm text-slate-500">
             Тегов нет —{" "}
-            <Link href="/tags" className="underline">
+            <Link href="/tags" className="underline underline-offset-2">
               создайте первый
             </Link>
             .
           </p>
         ) : (
-          <div className="flex flex-wrap gap-x-4 gap-y-2">
+          <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
-              <label key={tag.id} className="flex items-center gap-1.5 text-sm">
-                <input type="checkbox" name="tagIds" value={tag.id} className="accent-slate-900" />
+              <label
+                key={tag.id}
+                className="chip cursor-pointer border-slate-200 bg-white text-slate-700 hover:border-slate-400 has-checked:border-slate-900 has-checked:bg-slate-900 has-checked:text-white"
+              >
+                <input type="checkbox" name="tagIds" value={tag.id} className="sr-only" />
                 {tag.name}
               </label>
             ))}
@@ -60,12 +69,8 @@ export function NewLeadForm({ tags }: { tags: Tag[] }) {
         )}
       </Field>
 
-      <Field label="Статус" error={errors["status"]}>
-        <select
-          name="status"
-          defaultValue="new"
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
-        >
+      <Field label="Статус" error={errors["status"]} htmlFor="status">
+        <select id="status" name="status" defaultValue="new" className="input w-auto">
           {LEAD_STATUSES.map((status) => (
             <option key={status} value={status}>
               {STATUS_LABELS[status]}
@@ -74,17 +79,17 @@ export function NewLeadForm({ tags }: { tags: Tag[] }) {
         </select>
       </Field>
 
-      {errors["_form"] ? <p className="text-sm text-red-600">{errors["_form"]}</p> : null}
+      {errors["_form"] ? (
+        <p className="error-text" role="alert">
+          {errors["_form"]}
+        </p>
+      ) : null}
 
       <div className="flex items-center gap-3 border-t border-slate-100 pt-4">
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
-        >
-          {pending ? "Сохраняем…" : "Создать"}
+        <button type="submit" disabled={pending} className="btn-primary">
+          {pending ? "Сохраняем…" : "Создать лида"}
         </button>
-        <Link href="/" className="text-sm text-slate-500 hover:text-slate-900">
+        <Link href="/" className="btn-link">
           Отмена
         </Link>
       </div>
@@ -96,21 +101,27 @@ function Field({
   label,
   error,
   required,
+  htmlFor,
   children,
 }: {
   label: string;
   error?: string;
   required?: boolean;
+  htmlFor?: string;
   children: React.ReactNode;
 }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-slate-700">
+      <label className="label" htmlFor={htmlFor}>
         {label}
         {required ? <span className="text-red-500"> *</span> : null}
       </label>
       {children}
-      {error ? <p className="mt-1 text-sm text-red-600">{error}</p> : null}
+      {error ? (
+        <p className="error-text" role="alert">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }

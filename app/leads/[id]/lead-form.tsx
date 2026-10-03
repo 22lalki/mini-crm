@@ -12,37 +12,46 @@ export function LeadForm({ lead }: { lead: Lead }) {
   const errors = state.errors ?? {};
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-5">
       <input type="hidden" name="id" value={lead.id} />
 
       <div>
-        <label htmlFor="name" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="name" className="label">
           Имя <span className="text-red-500">*</span>
         </label>
         <input
           id="name"
           name="name"
           defaultValue={lead.name}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
+          aria-invalid={errors["name"] ? true : undefined}
+          className={`input ${errors["name"] ? "input-error" : ""}`}
         />
-        {errors["name"] ? <p className="mt-1 text-sm text-red-600">{errors["name"]}</p> : null}
+        {errors["name"] ? (
+          <p className="error-text" role="alert">
+            {errors["name"]}
+          </p>
+        ) : null}
       </div>
 
       <div>
-        <label htmlFor="contact" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="contact" className="label">
           Контакт
         </label>
         <input
           id="contact"
           name="contact"
           defaultValue={lead.contact ?? ""}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
+          className={`input ${errors["contact"] ? "input-error" : ""}`}
         />
-        {errors["contact"] ? <p className="mt-1 text-sm text-red-600">{errors["contact"]}</p> : null}
+        {errors["contact"] ? (
+          <p className="error-text" role="alert">
+            {errors["contact"]}
+          </p>
+        ) : null}
       </div>
 
       <div>
-        <label htmlFor="request" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="request" className="label">
           Запрос
         </label>
         <textarea
@@ -50,21 +59,20 @@ export function LeadForm({ lead }: { lead: Lead }) {
           name="request"
           rows={5}
           defaultValue={lead.request ?? ""}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
+          className={`input resize-y ${errors["request"] ? "input-error" : ""}`}
         />
-        {errors["request"] ? <p className="mt-1 text-sm text-red-600">{errors["request"]}</p> : null}
+        {errors["request"] ? (
+          <p className="error-text" role="alert">
+            {errors["request"]}
+          </p>
+        ) : null}
       </div>
 
       <div>
-        <label htmlFor="status" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="status" className="label">
           Статус
         </label>
-        <select
-          id="status"
-          name="status"
-          defaultValue={lead.status}
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
-        >
+        <select id="status" name="status" defaultValue={lead.status} className="input w-auto">
           {LEAD_STATUSES.map((status) => (
             <option key={status} value={status}>
               {STATUS_LABELS[status]}
@@ -73,18 +81,18 @@ export function LeadForm({ lead }: { lead: Lead }) {
         </select>
       </div>
 
-      {errors["_form"] ? <p className="text-sm text-red-600">{errors["_form"]}</p> : null}
+      {errors["_form"] ? (
+        <p className="error-text" role="alert">
+          {errors["_form"]}
+        </p>
+      ) : null}
 
       <div className="flex items-center gap-3">
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
-        >
+        <button type="submit" disabled={pending} className="btn-primary">
           {pending ? "Сохраняем…" : "Сохранить"}
         </button>
         {state.ok && state.message ? (
-          <span className="text-sm text-green-600">{state.message}</span>
+          <span className="text-sm font-medium text-green-600">{state.message}</span>
         ) : null}
       </div>
     </form>

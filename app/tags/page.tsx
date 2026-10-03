@@ -16,27 +16,30 @@ export default async function TagsPage() {
     <>
       <TopBar />
       <main className="mx-auto max-w-3xl px-4 py-6">
-        <h1 className="mb-4 text-xl font-semibold">Теги</h1>
+        <h1 className="text-xl font-semibold tracking-tight">Теги</h1>
+        <p className="mt-0.5 mb-4 text-sm text-slate-500">
+          Бот сам вешает тег выбранной категории. Удаление тега снимает его с лидов, сами лиды
+          остаются.
+        </p>
 
-        <section className="rounded-lg border border-slate-200 bg-white p-4">
-          <h2 className="mb-3 text-sm font-semibold tracking-wide text-slate-500 uppercase">
-            Новый тег
-          </h2>
+        <section className="card p-5">
+          <h2 className="section-title mb-3">Новый тег</h2>
           <CreateTagForm />
         </section>
 
-        <section className="mt-4 rounded-lg border border-slate-200 bg-white">
+        <section className="card mt-4 overflow-hidden">
           {tags.length === 0 ? (
-            <p className="p-4 text-sm text-slate-500">Тегов пока нет.</p>
+            <p className="p-5 text-sm text-slate-500">Тегов пока нет.</p>
           ) : (
             <ul className="divide-y divide-slate-100">
               {tags.map((tag) => {
                 const count = usage.get(tag.id) ?? 0;
                 return (
-                  <li key={tag.id} className="flex flex-wrap items-center gap-3 p-3">
-                    <span
-                      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs ${tagClasses(tag.color)}`}
-                    >
+                  <li
+                    key={tag.id}
+                    className="flex flex-wrap items-center gap-3 p-3.5 transition hover:bg-slate-50/70"
+                  >
+                    <span className={`chip w-28 justify-center ${tagClasses(tag.color)}`}>
                       {tag.name}
                     </span>
 
@@ -44,7 +47,7 @@ export default async function TagsPage() {
 
                     <Link
                       href={`/?tag=${encodeURIComponent(tag.name)}`}
-                      className="text-xs text-slate-500 hover:underline"
+                      className="text-xs text-slate-500 transition hover:text-slate-900 hover:underline"
                     >
                       лидов: {count}
                     </Link>
@@ -53,7 +56,7 @@ export default async function TagsPage() {
                       <input type="hidden" name="id" value={tag.id} />
                       <ConfirmButton
                         message={`Удалить тег «${tag.name}»? Он снимется с ${count} лид(ов).`}
-                        className="text-sm text-red-600 hover:underline"
+                        className="text-sm text-red-600 transition hover:text-red-700 hover:underline"
                       >
                         Удалить
                       </ConfirmButton>
@@ -64,10 +67,6 @@ export default async function TagsPage() {
             </ul>
           )}
         </section>
-
-        <p className="mt-3 text-xs text-slate-500">
-          Удаление тега снимает его с лидов (каскад по lead_tags), сами лиды остаются.
-        </p>
       </main>
     </>
   );

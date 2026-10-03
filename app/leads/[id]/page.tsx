@@ -30,29 +30,29 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
       </TopBar>
 
       <main className="mx-auto max-w-5xl px-4 py-6">
-        <Link href="/" className="text-sm text-slate-500 hover:text-slate-900">
+        <Link href="/" className="btn-link">
           ← к списку
         </Link>
 
-        <div className="mt-2 mb-4 flex flex-wrap items-center gap-3">
-          <h1 className="text-xl font-semibold">{lead.name}</h1>
-          <SourceBadge source={lead.source} />
-          <span className="text-sm text-slate-500">
+        <div className="mt-2 mb-4">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="text-xl font-semibold tracking-tight">{lead.name}</h1>
+            <SourceBadge source={lead.source} />
+          </div>
+          <p className="mt-1 text-sm text-slate-500">
             создан {formatDateTime(lead.createdAt)} · изменён {formatDateTime(lead.updatedAt)}
-          </span>
+          </p>
         </div>
 
         <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
-          <section className="rounded-lg border border-slate-200 bg-white p-4">
-            <h2 className="mb-3 text-sm font-semibold tracking-wide text-slate-500 uppercase">
-              Данные
-            </h2>
+          <section className="card p-5">
+            <h2 className="section-title mb-4">Данные</h2>
             <LeadForm lead={lead} />
 
             {href ? (
-              <p className="mt-3 border-t border-slate-100 pt-3 text-sm text-slate-500">
+              <p className="mt-4 border-t border-slate-100 pt-4 text-sm text-slate-500">
                 Быстрая связь:{" "}
-                <a href={href} className="text-slate-900 underline">
+                <a href={href} className="font-medium text-slate-900 underline underline-offset-2">
                   {lead.contact}
                 </a>
               </p>
@@ -62,7 +62,7 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
               <input type="hidden" name="id" value={lead.id} />
               <ConfirmButton
                 message="Удалить лида? Действие необратимо."
-                className="text-sm text-red-600 hover:underline"
+                className="text-sm text-red-600 transition hover:text-red-700 hover:underline"
               >
                 Удалить лида
               </ConfirmButton>
@@ -70,10 +70,8 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
           </section>
 
           <div className="space-y-4">
-            <section className="rounded-lg border border-slate-200 bg-white p-4">
-              <h2 className="mb-3 text-sm font-semibold tracking-wide text-slate-500 uppercase">
-                Теги
-              </h2>
+            <section className="card p-5">
+              <h2 className="section-title mb-3">Теги</h2>
 
               <div className="flex flex-wrap gap-1.5">
                 {lead.tags.length === 0 ? (
@@ -82,13 +80,14 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
                   lead.tags.map((tag) => (
                     <span key={tag.id} className="inline-flex items-center">
                       <TagBadge tag={tag} />
-                      <form action={detachTagAction} className="-ml-1">
+                      <form action={detachTagAction} className="-ml-1.5">
                         <input type="hidden" name="leadId" value={lead.id} />
                         <input type="hidden" name="tagId" value={tag.id} />
                         <button
                           type="submit"
                           title={`Снять тег «${tag.name}»`}
-                          className="px-1 text-xs text-slate-400 hover:text-red-600"
+                          aria-label={`Снять тег ${tag.name}`}
+                          className="px-1 text-sm leading-none text-slate-400 transition hover:text-red-600"
                         >
                           ×
                         </button>
@@ -106,7 +105,7 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
                   list="all-tags"
                   autoComplete="off"
                   placeholder="тег и Enter…"
-                  className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm outline-none focus:border-slate-500"
+                  className="input py-1.5"
                 />
                 <datalist id="all-tags">
                   {allTags.map((tag) => (
@@ -123,10 +122,7 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
                       <form key={tag.id} action={attachTagAction}>
                         <input type="hidden" name="leadId" value={lead.id} />
                         <input type="hidden" name="tagId" value={tag.id} />
-                        <button
-                          type="submit"
-                          className="rounded-full border border-slate-200 px-2.5 py-0.5 text-xs text-slate-600 hover:border-slate-400"
-                        >
+                        <button type="submit" className="chip-idle">
                           + {tag.name}
                         </button>
                       </form>
@@ -136,18 +132,16 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
               ) : null}
             </section>
 
-            <section className="rounded-lg border border-slate-200 bg-white p-4">
-              <h2 className="mb-3 text-sm font-semibold tracking-wide text-slate-500 uppercase">
-                Telegram
-              </h2>
-              <dl className="space-y-1 text-sm">
+            <section className="card p-5">
+              <h2 className="section-title mb-3">Telegram</h2>
+              <dl className="space-y-1.5 text-sm">
                 <Row label="username">
                   {lead.tgUsername ? (
                     <a
                       href={`https://t.me/${lead.tgUsername}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="underline"
+                      className="underline underline-offset-2"
                     >
                       @{lead.tgUsername}
                     </a>
@@ -159,17 +153,18 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
               </dl>
             </section>
 
-            <section className="rounded-lg border border-slate-200 bg-white p-4">
-              <h2 className="mb-3 text-sm font-semibold tracking-wide text-slate-500 uppercase">
-                История сообщений
-              </h2>
+            <section className="card p-5">
+              <h2 className="section-title mb-3">История сообщений</h2>
               {messages.length === 0 ? (
                 <p className="text-sm text-slate-400">сообщений нет</p>
               ) : (
                 <ul className="space-y-2">
                   {messages.map((message) => (
-                    <li key={message.id} className="rounded-md bg-slate-50 px-3 py-2 text-sm">
-                      <p className="whitespace-pre-wrap">{message.text}</p>
+                    <li
+                      key={message.id}
+                      className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-sm"
+                    >
+                      <p className="whitespace-pre-wrap text-slate-700">{message.text}</p>
                       <p className="mt-1 text-xs text-slate-400">
                         {formatDateTime(message.createdAt)}
                       </p>

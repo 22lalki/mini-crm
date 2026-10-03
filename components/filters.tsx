@@ -38,10 +38,10 @@ export function Filters({ tags }: { tags: Tag[] }) {
   const activeTags = values("tag");
   const activeSources = values("source");
   const activeStatuses = values("status");
-  const hasAny = activeTags.length + activeSources.length + activeStatuses.length > 0;
+  const total = activeTags.length + activeSources.length + activeStatuses.length;
 
   return (
-    <div className={`space-y-3 ${pending ? "opacity-70" : ""}`}>
+    <div className={`space-y-2.5 transition-opacity ${pending ? "opacity-60" : ""}`}>
       <Row label="Теги">
         {tags.length === 0 ? (
           <span className="text-xs text-slate-400">тегов пока нет</span>
@@ -53,9 +53,12 @@ export function Filters({ tags }: { tags: Tag[] }) {
                 key={tag.id}
                 type="button"
                 onClick={() => toggle("tag", tag.name)}
-                className={`rounded-full border px-2.5 py-0.5 text-xs transition ${
-                  active ? `${tagClasses(tag.color)} ring-2 ring-slate-900/20` : "border-slate-200 bg-white text-slate-600 hover:border-slate-400"
-                }`}
+                aria-pressed={active}
+                className={
+                  active
+                    ? `chip ${tagClasses(tag.color)} ring-2 ring-slate-900/25`
+                    : "chip-idle"
+                }
               >
                 {tag.name}
               </button>
@@ -86,13 +89,13 @@ export function Filters({ tags }: { tags: Tag[] }) {
             {STATUS_LABELS[status]}
           </Chip>
         ))}
-        {hasAny ? (
+        {total > 0 ? (
           <button
             type="button"
             onClick={() => startTransition(() => router.push(pathname))}
-            className="ml-2 text-xs text-slate-500 underline hover:text-slate-800"
+            className="ml-1 text-xs text-slate-500 underline underline-offset-2 transition hover:text-slate-900"
           >
-            сбросить всё
+            сбросить ({total})
           </button>
         ) : null}
       </Row>
@@ -103,9 +106,7 @@ export function Filters({ tags }: { tags: Tag[] }) {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      <span className="w-20 shrink-0 text-xs font-medium tracking-wide text-slate-400 uppercase">
-        {label}
-      </span>
+      <span className="section-title w-20 shrink-0">{label}</span>
       {children}
     </div>
   );
@@ -124,11 +125,8 @@ function Chip({
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-full border px-2.5 py-0.5 text-xs transition ${
-        active
-          ? "border-slate-900 bg-slate-900 text-white"
-          : "border-slate-200 bg-white text-slate-600 hover:border-slate-400"
-      }`}
+      aria-pressed={active}
+      className={active ? "chip-on" : "chip-idle"}
     >
       {children}
     </button>

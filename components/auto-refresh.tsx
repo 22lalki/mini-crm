@@ -23,13 +23,22 @@ export function AutoRefresh({ intervalMs = 10_000 }: { intervalMs?: number }) {
     <button
       type="button"
       onClick={() => setPaused((p) => !p)}
-      title="Список сам обновляется раз в 10 секунд"
-      className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800"
+      title={
+        paused
+          ? "Включить автообновление списка"
+          : "Список сам обновляется раз в 10 секунд — нажмите, чтобы выключить"
+      }
+      className="inline-flex items-center gap-1.5 text-xs text-slate-500 transition hover:text-slate-900"
     >
-      <span
-        className={`h-1.5 w-1.5 rounded-full ${paused ? "bg-slate-300" : "animate-pulse bg-green-500"}`}
-      />
-      {paused ? "автообновление выключено" : "обновляется каждые 10 с"}
+      <span className="relative flex h-2 w-2">
+        {paused ? null : (
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-70" />
+        )}
+        <span
+          className={`relative inline-flex h-2 w-2 rounded-full ${paused ? "bg-slate-300" : "bg-green-500"}`}
+        />
+      </span>
+      <span className="hidden sm:inline">{paused ? "обновление выкл." : "обновляется"}</span>
     </button>
   );
 }

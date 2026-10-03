@@ -4,7 +4,84 @@
   color-scheme: light;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: #f8fafc;
+  background:
+    radial-gradient(60rem 30rem at 50% -12rem, #e8edf7 0%, transparent 70%),
+    #f6f7f9;
   color: #0f172a;
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", sans-serif;
+}
+
+/*
+ * Повторяющиеся элементы форм, кнопок и бейджей.
+ * В Tailwind v4 @apply принимает только настоящие утилиты, ссылаться
+ * на соседний component-класс нельзя — поэтому база продублирована.
+ */
+@layer components {
+  .card {
+    @apply rounded-xl border border-slate-200 bg-white shadow-sm;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-slate-700;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900
+      transition outline-none placeholder:text-slate-400
+      focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10;
+  }
+
+  .input-error {
+    @apply border-red-400 focus:border-red-500 focus:ring-red-500/15;
+  }
+
+  .error-text {
+    @apply mt-1.5 text-sm text-red-600;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg bg-slate-900 px-3.5 py-2
+      text-sm font-medium text-white shadow-sm transition select-none
+      hover:bg-slate-800 active:bg-slate-950
+      disabled:cursor-not-allowed disabled:opacity-55;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200
+      bg-white px-3.5 py-2 text-sm font-medium text-slate-700 transition select-none
+      hover:border-slate-300 hover:bg-slate-50
+      disabled:cursor-not-allowed disabled:opacity-55;
+  }
+
+  .btn-link {
+    @apply text-sm text-slate-500 transition hover:text-slate-900;
+  }
+
+  /* Чип фильтра и бейдж: одна геометрия на всё приложение. */
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs
+      leading-none whitespace-nowrap transition;
+  }
+
+  .chip-idle {
+    @apply inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white
+      px-2.5 py-1 text-xs leading-none whitespace-nowrap text-slate-600 transition
+      hover:border-slate-400 hover:text-slate-900;
+  }
+
+  .chip-on {
+    @apply inline-flex items-center gap-1 rounded-full border border-slate-900 bg-slate-900
+      px-2.5 py-1 text-xs leading-none whitespace-nowrap text-white transition;
+  }
+
+  .section-title {
+    @apply text-xs font-semibold tracking-wider text-slate-400 uppercase;
+  }
 }

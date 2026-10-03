@@ -9,10 +9,11 @@ export function LoginForm({ next }: { next: string }) {
   const [state, formAction, pending] = useActionState(loginAction, initial);
 
   return (
-    <form action={formAction} className="mt-5 space-y-3">
+    <form action={formAction} className="mt-5 space-y-4">
       <input type="hidden" name="next" value={next} />
+
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+        <label htmlFor="password" className="label">
           Пароль
         </label>
         <input
@@ -21,15 +22,17 @@ export function LoginForm({ next }: { next: string }) {
           type="password"
           autoFocus
           autoComplete="current-password"
-          className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
+          aria-invalid={state.error ? true : undefined}
+          className={`input ${state.error ? "input-error" : ""}`}
         />
-        {state.error ? <p className="mt-1 text-sm text-red-600">{state.error}</p> : null}
+        {state.error ? (
+          <p className="error-text" role="alert">
+            {state.error}
+          </p>
+        ) : null}
       </div>
-      <button
-        type="submit"
-        disabled={pending}
-        className="w-full rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
-      >
+
+      <button type="submit" disabled={pending} className="btn-primary w-full">
         {pending ? "Проверяем…" : "Войти"}
       </button>
     </form>
