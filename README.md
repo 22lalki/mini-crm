@@ -22,7 +22,7 @@ Telegram Bot API через webhook (без библиотек, без long poll
 | Пункт ТЗ | Статус | Где смотреть |
 | --- | --- | --- |
 | **1. Заявки из Telegram-бота** | готово | [lib/bot.ts](lib/bot.ts), [app/api/telegram/webhook/route.ts](app/api/telegram/webhook/route.ts) |
-| **2. Личный Telegram (Telegram Business)** | готово, бот подключён к живому аккаунту | `handleBusinessMessage` в [lib/bot.ts](lib/bot.ts) |
+| **2. Личный Telegram (Telegram Business)** | сделано и проверено на живом аккаунте, подключение снято — см. [SOLUTION.md](SOLUTION.md) | `handleBusinessMessage` в [lib/bot.ts](lib/bot.ts) |
 | **3. Ручное добавление** | готово | [app/leads/new/](app/leads/new/) |
 | **4. Теги** | готово | [app/leads/[id]/page.tsx](app/leads/%5Bid%5D/page.tsx), [app/tags/](app/tags/), [components/filters.tsx](components/filters.tsx) |
 | Доступ по паролю | готово | [middleware.ts](middleware.ts), [lib/session.ts](lib/session.ts) |
