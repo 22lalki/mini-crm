@@ -91,6 +91,11 @@ function normalizePhone(raw: string): string {
 
 /** Точка входа вебхука. Ошибки внутри не должны мешать быстро ответить 200. */
 export async function handleUpdate(update: TgUpdate): Promise<void> {
+  // Тип апдейта в логах: без него непонятно, дошло ли событие вообще.
+  const kind =
+    Object.keys(update).find((key) => key !== "update_id") ?? "unknown";
+  console.log(`[webhook] update ${update.update_id}: ${kind}`);
+
   if (update.callback_query) {
     await handleCallbackQuery(update.callback_query);
     return;
@@ -234,6 +239,14 @@ async function handleCallbackQuery(query: TgCallbackQuery): Promise<void> {
  */
 async function handleBusinessMessage(message: TgMessage): Promise<void> {
   const from = message.from;
+
+  // Без содержимого сообщения: только то, по чему видно, почему апдейт отбросили.
+  console.log(
+    `[business] from=${from?.id ?? "—"} chat=${message.chat.id} type=${message.chat.type} text=${Boolean(
+      message.text ?? message.caption,
+    )}`,
+  );
+
   if (!from || from.is_bot) return;
 
   // business_message приходит и на исходящие сообщения владельца аккаунта.
